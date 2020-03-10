@@ -408,15 +408,15 @@ function confirmation_Variable_param_location()
 
   cat ${yml_name} | sed -n '/- location/,/- ese_device/p' | grep name | cut -d \" -f 2 > loc_yml
   # 延伸対応
-  if [ $(cat temp_loc_source) == hh3 ]
+  if [ "$(cat temp_loc_source)" == "hh3" -o "$(cat temp_loc_source)" == "$(echo -e "hh3\nlo8")" ]
   then 
     echo lo8 > loc_source
     rm -f temp_loc_source temp_error*
-  elif [ $(cat temp_loc_source) == ff6 ]
+  elif [ "$(cat temp_loc_source)" == "ff6" -o "$(cat temp_loc_source)" == "$(echo -e "ff1\nff6")" ]
   then 
     echo ff1 > loc_source
     rm -f temp_loc_source temp_error*
-  elif [ $(cat temp_loc_source) == os1 ]
+  elif [ "$(cat temp_loc_source)" == "os1" -o "$(cat temp_loc_source)" == "$(echo -e "os1\nos5")" ]
   then 
     echo os5 > loc_source
     rm -f temp_loc_source temp_error*
