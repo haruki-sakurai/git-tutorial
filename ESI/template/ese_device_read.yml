@@ -1,0 +1,6 @@
+- ese_device_{{ qfx_for_key_name }}:
+    type: ese_device
+    operation: read
+    user: admin-user
+    properties: |-
+        name: "{{ qfx_main }}"

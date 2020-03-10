@@ -1,0 +1,124 @@
+ESI用のyml作成ツールの使い方
+1.Confluenceからツールをダウンロード
+	以下のページからツールをダウンロードしてください
+	URL:https://confluence.ntt.eu/pages/editpage.action?pageId=493369378
+	ファイル名:ESI_<verion番号>.zip
+
+2.シェルスクリプト(bash)の動く環境に配置
+	踏み台や各VMなどのシェルスクリプトが動作する環境にダウンロードしたESI_<verion番号>.zipを
+	配置し、unzipなど用いて解凍してください
+	
+	コマンド例:
+	$ unzip ESI_ver1.0.zip
+	$ ls ESI              #解凍で出力されるディレクトリはESIとしています
+
+3.実行テスト
+	cdでESIディレクトリ以下に移動し、unittest.shを実行し、以下の出力結果になるか
+	確認してくださ
+  ##### TEMPLATE SUM CHECK #####
+  ./template/bm_ports.yml:        OK
+  ./template/bs_ports.yml:        OK
+  ./template/ese_device_create.yml:       OK
+  ./template/ese_device_read.yml: OK
+  ./template/fs_ports.yml:        OK
+  ./template/fss_ports.yml:       OK
+  ./template/location.yml:        OK
+  ##### ERROR TEST ######
+  Show usage message :    OK
+  Error Option Code2:     OK
+  Error Option Code3:     OK
+  Error Option Code4:     OK
+  ##### SUCCESS TEST #####
+  Baremetal:      OK
+  BlockStorage:   OK
+  FileStorage:    OK
+  FileStorageStandard:    OK
+  New QFX:        OK
+4.作成準備
+	ESI以下に各SDP毎に合わせたCSVを作ります。
+	データとしては以下のようになります。
+	
+	Baremetal #配線表の情報
+	QFX(Hostname),ポート名(xe-x/x/x),サーバ名(Hostname),NIC(NICX-X)
+	作成例:
+	sg2ax-bmsl0001m,xe-0/0/0,sg2ap-bmus0001n,NIC1-1
+	sg2ax-bmdl0001m,xe-0/0/0,sg2ap-bmus0001n,NIC1-2
+	sg2ax-bmsl0002b,xe-0/0/0,sg2ap-bmus0001n,NIC2-1
+	sg2ax-bmdl0002b,xe-0/0/0,sg2ap-bmus0001n,NIC2-2
+	
+	BlockStorage
+	QFXのメイン機(Hostname),論理ポート名(ae番号),ストレージ名(Hostname)
+	作成例:
+	sg2bx-stsl0001m,ae0,sg2bp-stst0001p
+	sg2bx-stsl0001m,ae1,sg2bp-stst0002s
+	sg2bx-stdl0001m,ae0,sg2bp-stst0001p
+	sg2bx-stdl0001m,ae1,sg2bp-stst0002s
+	
+	FileStorage
+	QFXのメイン機(Hostname),論理ポート名(ae番号),ストレージ名(Hostname)
+	作成例:
+	sg2bx-stsl1001m,ae0,sg2bp-stfs0001p
+	sg2bx-stsl1001m,ae1,sg2bp-stfs0002s
+	
+  FileStorageStandard
+	QFXのメイン機(Hostname),論理ポート名(ae番号),ストレージ名(Hostname)
+	作成例:
+  os5bx-stdl0001m,ae8,os5bp-stsd0001p
+  os5bx-stdl0001m,ae9,os5bp-stsd0002s
+  os5bx-stsl0001m,ae8,os5bp-stsd0001p
+  os5bx-stsl0001m,ae9,os5bp-stsd0002s
+
+  新規QFX
+	QFXのメイン機(Hostname),ループバックIP
+	作成例:
+	sg2bx-stdl0001m,10.6.4.5
+	sg2bx-stsl0001m,10.6.12.5
+
+  ※注意※
+  Windows改行コード(CRLF)がないことを確認して、CSV作成してください
+  確認手順
+  cat -e [CSVファイル]
+  表示例:
+  hh3bx-bmsl0006b,xe-0/0/37,hh3bp-bmus0099n,NIC2-1^M$
+  hh3bx-bmdl0006b,xe-0/0/37,hh3bp-bmus0099n,NIC2-2^M$
+  上記のように^Mが存在している場合,サクラエディタやviなどで^Mを削除してください
+  
+  CSVファイルを作成する際末尾に不要行を入力しないようにしてください。
+
+5.作成
+	作成したCSVを用いてymlを作成します。
+	以下のようにスクリプトの使い作成します。
+      ./make_yaml.sh   [-SDP]   [FILE]
+                        -bm     cablemap info as physical   
+                        -bs     connection info as logical  
+                        -fs     connection info as logical  
+                        -qfx    QFX infomation
+      使用例:
+      $ ./make_yaml.sh -bm baremetal.csv
+	実行すると、画面に結果が出力されるのでリダイレクトなどして、保存します。
+	  使用例:
+      $ ./make_yaml.sh -bm baremetal.csv >> baremetal.yml
+      
+    作成は以上で完了です。
+    スクリプトにミスがありましたら、森田まで連絡ください
+
+6.ツール構成
+./ESI
+|--howtouse.txt 		本テキスト
+|--make_yaml.sh			ツール本体
+|--template			各ymlのテンプレート
+|  |--bm_ports.yml
+|  |--bs_ports.yml
+|  |--ese_device_create.yml
+|  |--ese_device_read.yml
+|  |--fs_ports.yml
+|  |--location.yml
+|  |--param_list.csv
+|--test_data			実行テスト用のデータ
+|  |--test_baremetal.csv
+|  |--test_blockstorage.csv
+|  |--test_filestorage.csv
+|  |--test_qfx.csv
+|--unittest.sh			実行テスト用shell
+|--version.txt			バージョンテキスト
+

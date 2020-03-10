@@ -1,0 +1,29 @@
+- physical_port_{{ qfx_main }}-{{ qfx_logical_port }}:
+    type: physical_port
+    operation: create
+    user: admin-user
+    wait_for: |-
+        status: DOWN
+        timeout: 180
+        interval: 2
+    properties: |-
+        description: "Affinity{{ group }} QFX {{ plane }} Leaf for {{ cluster_role }} Storage Chassis"
+        name: "{{ qfx_main }}-{{ qfx_logical_port }}"
+        plane: "{{ plane }}"
+        service_id: "storage"
+        service_owner: "storage"
+
+- ese_physical_port_{{ qfx_main }}-{{ qfx_logical_port }}:
+    type: ese_physical_port
+    operation: create
+    user: admin-user
+    wait_for: |-
+        status: DOWN
+        timeout: 180
+        interval: 2
+    properties: |-
+        description: "connected to {{ storage_name }} a0{{ storage_port }} (myself : {{ qfx_main }} {{ qfx_logical_port }})"
+        name: "{{ qfx_logical_port }}"
+        ese_device_id: "{{ese_device_{{ qfx_main }}}}"
+        connected_port_id: "{{physical_port_{{ qfx_main }}-{{ qfx_logical_port }}}}"
+        connected_port_owner: "physical_port"

@@ -1,0 +1,68 @@
+ESI登録用yml確認ツール(yml_comfirmation.sh)使用方法
+
+1.ツールのダウンロード
+	以下のページからツールをダウンロードしてください
+	※yml作成ツールのアーカイブ内に包含されています。
+
+	URL:https://confluence.ntt.eu/pages/editpage.action?pageId=493369378
+	ファイル名:ESI_<verion番号>.zip
+
+2.ツールの実行方法
+	以下の書式でツールを実行します。
+      bash ./yml_comfirmation.sh [-SDP] [csvファイル] [ymlファイル]
+
+	各引数について：
+	  [-SDP]
+	    ESIへの登録対象となるSDP名を指定します。指定可能なパラメータは下記4つ。
+         -bm     登録対象がBaremetalの場合指定
+         -bs     登録対象がBlockStorageの場合指定
+         -fs     登録対象がFileStorageの場合指定
+         -fss     登録対象がFileStorageStandardの場合指定
+         -qfx    登録対象がQFXの場合指定
+
+	  [csvファイル]
+	    make_yml.sh実行時に引数としたcsvファイルを指定します。
+
+	  [ymlファイル]
+	    make_yml.shを実行し作成したymlファイルを指定します。
+
+     実行例:
+	  登録対象がBaremetalでcsvファイル名がbaremetal.csv、ymlファイル名がbaremetal.ymlの場合
+      $bash ./make_yaml.sh -bm baremetal.csv baremetal.yml
+
+3.実行時の出力について
+	本ツールを実行すると下記2つの処理毎の確認結果が出力されます。
+	各処理毎の出力詳細を以下に記載します。
+	
+	・固定＋不要パラメータ確認結果
+	   不要パラメータ入力確認の結果として正常な場合下記のメッセージが出力されます。
+	   Unnecessary Parameter Check: OK
+
+	   不要パラメータ入力確認の結果として異常な場合、下記のメッセージが出力されます。
+	   また、下記のメッセージと合わせymlファイル内の被疑行が出力されます。
+	   Unnecessary Parameter Check: NG
+	
+	   [19行目に不要行が入力されていた場合の出力例]：
+	   Unnecessary Parameter Check: NG
+	   =============
+	   LineNo: 19
+	   =============
+
+	   
+	・可変パラメータ確認結果
+	   可変パラメータ確認の結果として正常な場合下記のメッセージが出力されます。
+	   Variable Parameter Check: OK
+
+	   可変パラメータ確認の結果として異常な場合、下記の形式のメッセージが出力されます。
+	   また、下記のメッセージと合わせymlファイル内の被疑箇所が出力されます。
+	   Variable Parameter Check: NG
+
+	   [physical_portリソースのnameキーのパラメータがNGだった場合の出力例]：
+	   Variable Parameter Check: NG
+	   =============
+	   < kw5bx-stsl0003m-ae1 (physicalport-name)
+	   =============
+
+	・2つの処理共正常に完了した場合は下記のメッセージが出力されます。
+	   Unnecessary Parameter Check: OK
+	   Variable param Check: OK
