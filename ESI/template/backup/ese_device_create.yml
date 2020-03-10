@@ -1,0 +1,17 @@
+- ese_device_{{ qfx_main }}:
+    type: ese_device
+    operation: create
+    user: admin-user
+    wait_for: |-
+        status: ACTIVE
+        timeout: 180
+        interval: 2
+    properties: |-
+        description: "{{ qfx_main }}"
+        hostname: "{{ qfx_main }}"
+        name: "{{ qfx_main }}"
+        existing: "existing"
+        location: "{{location}}"
+        type: "tor"
+        public_ip_address: "{{ loop_back_ip }}"
+        management_ip_address: "{{ loop_back_ip }}"

@@ -1,0 +1,7 @@
+- location:
+    type: location
+    operation: read
+    user: admin-user
+    properties: |-
+        name: "{{ dc_name }}"
+

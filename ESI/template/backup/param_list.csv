@@ -1,0 +1,16 @@
+#param,respalce_str
+dc_name,{{ dc_name }}
+qfx_name,{{ qfx_name }}
+qfx_main,{{ qfx_main }}
+qfx_physical_port,{{ qfx_physical_port }}
+qfx_logical_port,{{ qfx_logical_port }}
+plane,{{ plane }}
+group,{{ group }}
+loop_back_ip,{{ loop_back_ip }}
+server_name,{{ server_name }}
+pci_no,{{ pci_no }}
+port_no,{{ port_no }}
+role_no,{{ role_no }}
+storage_name,{{ storage_name }}
+storage_port,{{ storage_port }}
+cluster_role,{{ cluster_role }}

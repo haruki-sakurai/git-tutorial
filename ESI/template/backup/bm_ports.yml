@@ -1,0 +1,29 @@
+- physical_port_{{ qfx_main }}_{{ pci_no }}_{{ port_no }}_{{ qfx_physical_port }}:
+   type: physical_port
+   operation: create
+   user: admin-user
+   wait_for: |-
+      status: DOWN
+      timeout: 180
+      interval: 2
+   properties: |-
+      description: "Connected to Baremetal Server"
+      name: "NetworkdCard{{ pci_no }}_NicPhysicalPort{{ port_no }}"
+      plane: "{{ plane }}"
+      service_owner: "server"
+      service_id: "adminpod-connection-interface"
+
+- ese_physical_port_{{ qfx_main }}_{{ pci_no }}_{{ port_no }}_{{ qfx_physical_port }}:
+   type: ese_physical_port
+   operation: create
+   user: admin-user
+   wait_for: |-
+      status: ACTIVE
+      timeout: 180
+      interval: 2
+   properties: |-
+      description: "{{ server_name }}_nic{{ pci_no }}_port{{ port_no }}"
+      name: "xe-{{ role_no }}/0/{{ qfx_physical_port }}"
+      ese_device_id: "{{ese_device_{{ qfx_main }}}}"
+      connected_port_id: "{{physical_port_{{ qfx_main }}_{{ pci_no }}_{{ port_no }}_{{ qfx_physical_port }}}}"
+      connected_port_owner: "physical_port"
